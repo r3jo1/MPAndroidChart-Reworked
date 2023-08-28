@@ -263,160 +263,106 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
         getMenuInflater().inflate(R.menu.line, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/LineChartActivity1.java"));
-                startActivity(i);
-                break;
+        if (itemId == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/LineChartActivity1.java"));
+            startActivity(i);
+        } else if (itemId == R.id.actionToggleValues) {
+            List<ILineDataSet> sets = chart.getData().getDataSets();
+
+            for (ILineDataSet iSet : sets) {
+                LineDataSet set = (LineDataSet) iSet;
+                set.setDrawValues(!set.isDrawValuesEnabled());
             }
-            case R.id.actionToggleValues: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
 
-                for (ILineDataSet iSet : sets) {
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleIcons) {
+            List<ILineDataSet> sets = chart.getData().getDataSets();
 
-                    LineDataSet set = (LineDataSet) iSet;
-                    set.setDrawValues(!set.isDrawValuesEnabled());
-                }
+            for (ILineDataSet iSet : sets) {
+                LineDataSet set = (LineDataSet) iSet;
+                set.setDrawIcons(!set.isDrawIconsEnabled());
+            }
 
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleHighlight) {
+            if (chart.getData() != null) {
+                chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
                 chart.invalidate();
-                break;
             }
-            case R.id.actionToggleIcons: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
+        } else if (itemId == R.id.actionToggleFilled) {
+            List<ILineDataSet> sets = chart.getData().getDataSets();
 
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    set.setDrawIcons(!set.isDrawIconsEnabled());
-                }
-
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleHighlight: {
-                if(chart.getData() != null) {
-                    chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
-                    chart.invalidate();
-                }
-                break;
-            }
-            case R.id.actionToggleFilled: {
-
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
-
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    if (set.isDrawFilledEnabled())
-                        set.setDrawFilled(false);
-                    else
-                        set.setDrawFilled(true);
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleCircles: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
-
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    if (set.isDrawCirclesEnabled())
-                        set.setDrawCircles(false);
-                    else
-                        set.setDrawCircles(true);
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleCubic: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
-
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    set.setMode(set.getMode() == LineDataSet.Mode.CUBIC_BEZIER
-                            ? LineDataSet.Mode.LINEAR
-                            :  LineDataSet.Mode.CUBIC_BEZIER);
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleStepped: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
-
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    set.setMode(set.getMode() == LineDataSet.Mode.STEPPED
-                            ? LineDataSet.Mode.LINEAR
-                            :  LineDataSet.Mode.STEPPED);
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleHorizontalCubic: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
-
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    set.setMode(set.getMode() == LineDataSet.Mode.HORIZONTAL_BEZIER
-                            ? LineDataSet.Mode.LINEAR
-                            :  LineDataSet.Mode.HORIZONTAL_BEZIER);
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionTogglePinch: {
-                if (chart.isPinchZoomEnabled())
-                    chart.setPinchZoom(false);
+            for (ILineDataSet iSet : sets) {
+                LineDataSet set = (LineDataSet) iSet;
+                if (set.isDrawFilledEnabled())
+                    set.setDrawFilled(false);
                 else
-                    chart.setPinchZoom(true);
+                    set.setDrawFilled(true);
+            }
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleCircles) {
+            List<ILineDataSet> sets = chart.getData().getDataSets();
 
-                chart.invalidate();
-                break;
+            for (ILineDataSet iSet : sets) {
+                LineDataSet set = (LineDataSet) iSet;
+                if (set.isDrawCirclesEnabled())
+                    set.setDrawCircles(false);
+                else
+                    set.setDrawCircles(true);
             }
-            case R.id.actionToggleAutoScaleMinMax: {
-                chart.setAutoScaleMinMaxEnabled(!chart.isAutoScaleMinMaxEnabled());
-                chart.notifyDataSetChanged();
-                break;
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleCubic) {
+            List<ILineDataSet> sets = chart.getData().getDataSets();
+
+            for (ILineDataSet iSet : sets) {
+                LineDataSet set = (LineDataSet) iSet;
+                set.setMode(set.getMode() == LineDataSet.Mode.CUBIC_BEZIER
+                        ? LineDataSet.Mode.LINEAR
+                        :  LineDataSet.Mode.CUBIC_BEZIER);
             }
-            case R.id.animateX: {
-                chart.animateX(2000);
-                break;
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleStepped) {
+            List<ILineDataSet> sets = chart.getData().getDataSets();
+
+            for (ILineDataSet iSet : sets) {
+                LineDataSet set = (LineDataSet) iSet;
+                set.setMode(set.getMode() == LineDataSet.Mode.STEPPED
+                        ? LineDataSet.Mode.LINEAR
+                        :  LineDataSet.Mode.STEPPED);
             }
-            case R.id.animateY: {
-                chart.animateY(2000, Easing.EaseInCubic);
-                break;
+            chart.invalidate();
+        } else if (itemId == R.id.actionToggleHorizontalCubic) {
+            List<ILineDataSet> sets = chart.getData().getDataSets();
+
+            for (ILineDataSet iSet : sets) {
+                LineDataSet set = (LineDataSet) iSet;
+                set.setMode(set.getMode() == LineDataSet.Mode.HORIZONTAL_BEZIER
+                        ? LineDataSet.Mode.LINEAR
+                        :  LineDataSet.Mode.HORIZONTAL_BEZIER);
             }
-            case R.id.animateXY: {
-                chart.animateXY(2000, 2000);
-                break;
-            }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
+            chart.invalidate();
+        } else if (itemId == R.id.animateX) {
+            chart.animateX(2000);
+        } else if (itemId == R.id.animateY) {
+            chart.animateY(2000, Easing.EaseInCubic);
+        } else if (itemId == R.id.animateXY) {
+            chart.animateXY(2000, 2000);
+        } else if (itemId == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
         }
+
         return true;
     }
+
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

@@ -17,13 +17,16 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
+import com.rejowan.chart.animation.Easing;
 import com.rejowan.chart.charts.LineChart;
 import com.rejowan.chart.components.Legend;
 import com.rejowan.chart.data.Entry;
 import com.rejowan.chart.data.LineData;
 import com.rejowan.chart.data.LineDataSet;
 import com.rejowan.chart.highlight.Highlight;
+import com.rejowan.chart.interfaces.datasets.IDataSet;
 import com.rejowan.chart.interfaces.datasets.ILineDataSet;
+import com.rejowan.chart.interfaces.datasets.IRadarDataSet;
 import com.rejowan.chart.listener.ChartTouchListener;
 import com.rejowan.chart.listener.OnChartGestureListener;
 import com.rejowan.chart.listener.OnChartValueSelectedListener;
@@ -147,58 +150,39 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.viewGithub: {
                 Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/MultiLineChartActivity.java"));
+                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/RadarChartActivity.java"));
                 startActivity(i);
                 break;
             }
             case R.id.actionToggleValues: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
-
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
+                for (IDataSet<?> set : chart.getData().getDataSets())
                     set.setDrawValues(!set.isDrawValuesEnabled());
-                }
 
                 chart.invalidate();
-                break;
-            }
-            /*
-            case R.id.actionToggleIcons: { break; }
-             */
-            case R.id.actionTogglePinch: {
-                if (chart.isPinchZoomEnabled())
-                    chart.setPinchZoom(false);
-                else
-                    chart.setPinchZoom(true);
-
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleAutoScaleMinMax: {
-                chart.setAutoScaleMinMaxEnabled(!chart.isAutoScaleMinMaxEnabled());
-                chart.notifyDataSetChanged();
                 break;
             }
             case R.id.actionToggleHighlight: {
-                if(chart.getData() != null) {
+                if (chart.getData() != null) {
                     chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
                     chart.invalidate();
                 }
                 break;
             }
+            case R.id.actionToggleRotate: {
+                if (chart.isRotationEnabled())
+                    chart.setRotationEnabled(false);
+                else
+                    chart.setRotationEnabled(true);
+                chart.invalidate();
+                break;
+            }
             case R.id.actionToggleFilled: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
+                ArrayList<IRadarDataSet> sets = (ArrayList<IRadarDataSet>) chart.getData().getDataSets();
 
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
+                for (IRadarDataSet set : sets) {
                     if (set.isDrawFilledEnabled())
                         set.setDrawFilled(false);
                     else
@@ -207,61 +191,40 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
                 chart.invalidate();
                 break;
             }
-            case R.id.actionToggleCircles: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
+            case R.id.actionToggleHighlightCircle: {
+                ArrayList<IRadarDataSet> sets = (ArrayList<IRadarDataSet>) chart.getData().getDataSets();
 
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    if (set.isDrawCirclesEnabled())
-                        set.setDrawCircles(false);
-                    else
-                        set.setDrawCircles(true);
+                for (IRadarDataSet set : sets) {
+                    set.setDrawHighlightCircleEnabled(!set.isDrawHighlightCircleEnabled());
                 }
                 chart.invalidate();
                 break;
             }
-            case R.id.actionToggleCubic: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
-
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    set.setMode(set.getMode() == LineDataSet.Mode.CUBIC_BEZIER
-                            ? LineDataSet.Mode.LINEAR
-                            :  LineDataSet.Mode.CUBIC_BEZIER);
-                }
+            case R.id.actionToggleXLabels: {
+                chart.getXAxis().setEnabled(!chart.getXAxis().isEnabled());
+                chart.notifyDataSetChanged();
                 chart.invalidate();
                 break;
             }
-            case R.id.actionToggleStepped: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
-
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    set.setMode(set.getMode() == LineDataSet.Mode.STEPPED
-                            ? LineDataSet.Mode.LINEAR
-                            :  LineDataSet.Mode.STEPPED);
-                }
+            case R.id.actionToggleYLabels: {
+                chart.getYAxis().setEnabled(!chart.getYAxis().isEnabled());
                 chart.invalidate();
                 break;
             }
-            case R.id.actionToggleHorizontalCubic: {
-                List<ILineDataSet> sets = chart.getData()
-                        .getDataSets();
-
-                for (ILineDataSet iSet : sets) {
-
-                    LineDataSet set = (LineDataSet) iSet;
-                    set.setMode(set.getMode() == LineDataSet.Mode.HORIZONTAL_BEZIER
-                            ? LineDataSet.Mode.LINEAR
-                            :  LineDataSet.Mode.HORIZONTAL_BEZIER);
-                }
-                chart.invalidate();
+            case R.id.animateX: {
+                chart.animateX(1400);
+                break;
+            }
+            case R.id.animateY: {
+                chart.animateY(1400);
+                break;
+            }
+            case R.id.animateXY: {
+                chart.animateXY(1400, 1400);
+                break;
+            }
+            case R.id.actionToggleSpin: {
+                chart.spin(2000, chart.getRotationAngle(), chart.getRotationAngle() + 360, Easing.EaseInOutCubic);
                 break;
             }
             case R.id.actionSave: {
@@ -270,18 +233,6 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
                 } else {
                     requestStoragePermission(chart);
                 }
-                break;
-            }
-            case R.id.animateX: {
-                chart.animateX(2000);
-                break;
-            }
-            case R.id.animateY: {
-                chart.animateY(2000);
-                break;
-            }
-            case R.id.animateXY: {
-                chart.animateXY(2000, 2000);
                 break;
             }
         }
