@@ -1,4 +1,3 @@
-
 package com.rejowan.mpandroidchart;
 
 import android.Manifest;
@@ -33,8 +32,7 @@ import com.rejowan.mpandroidchart.notimportant.DemoBase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScatterChartActivity extends DemoBase implements OnSeekBarChangeListener,
-        OnChartValueSelectedListener {
+public class ScatterChartActivity extends DemoBase implements OnSeekBarChangeListener, OnChartValueSelectedListener {
 
     private ScatterChart chart;
     private SeekBar seekBarX, seekBarY;
@@ -43,8 +41,7 @@ public class ScatterChartActivity extends DemoBase implements OnSeekBarChangeLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_scatterchart);
 
         setTitle("ScatterChartActivity");
@@ -112,12 +109,12 @@ public class ScatterChartActivity extends DemoBase implements OnSeekBarChangeLis
 
         for (int i = 0; i < seekBarX.getProgress(); i++) {
             float val = (float) (Math.random() * seekBarY.getProgress()) + 3;
-            values2.add(new Entry(i+0.33f, val));
+            values2.add(new Entry(i + 0.33f, val));
         }
 
         for (int i = 0; i < seekBarX.getProgress(); i++) {
             float val = (float) (Math.random() * seekBarY.getProgress()) + 3;
-            values3.add(new Entry(i+0.66f, val));
+            values3.add(new Entry(i + 0.66f, val));
         }
 
         // create a dataset and give it a type
@@ -159,68 +156,54 @@ public class ScatterChartActivity extends DemoBase implements OnSeekBarChangeLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/ScatterChartActivity.java"));
-                startActivity(i);
-                break;
+        if (item.getItemId() == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/ScatterChartActivity.java"));
+            startActivity(i);
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleValues) {
+            List<IScatterDataSet> sets = chart.getData().getDataSets();
+
+            for (IScatterDataSet iSet : sets) {
+
+                ScatterDataSet set = (ScatterDataSet) iSet;
+                set.setDrawValues(!set.isDrawValuesEnabled());
             }
-            case R.id.actionToggleValues: {
-                List<IScatterDataSet> sets = chart.getData()
-                        .getDataSets();
 
-                for (IScatterDataSet iSet : sets) {
-
-                    ScatterDataSet set = (ScatterDataSet) iSet;
-                    set.setDrawValues(!set.isDrawValuesEnabled());
-                }
-
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleHighlight) {
+            if (chart.getData() != null) {
+                chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
                 chart.invalidate();
-                break;
             }
-            case R.id.actionToggleHighlight: {
-                if(chart.getData() != null) {
-                    chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
-                    chart.invalidate();
-                }
-                break;
-            }
-            case R.id.actionTogglePinch: {
-                if (chart.isPinchZoomEnabled())
-                    chart.setPinchZoom(false);
-                else
-                    chart.setPinchZoom(true);
+            return true;
+        } else if (item.getItemId() == R.id.actionTogglePinch) {
+            chart.setPinchZoom(!chart.isPinchZoomEnabled());
 
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleAutoScaleMinMax: {
-                chart.setAutoScaleMinMaxEnabled(!chart.isAutoScaleMinMaxEnabled());
-                chart.notifyDataSetChanged();
-                break;
-            }
-            case R.id.animateX: {
-                chart.animateX(3000);
-                break;
-            }
-            case R.id.animateY: {
-                chart.animateY(3000);
-                break;
-            }
-            case R.id.animateXY: {
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleAutoScaleMinMax) {
+            chart.setAutoScaleMinMaxEnabled(!chart.isAutoScaleMinMaxEnabled());
+            chart.notifyDataSetChanged();
+            return true;
+        } else if (item.getItemId() == R.id.animateX) {
+            chart.animateX(3000);
+            return true;
+        } else if (item.getItemId() == R.id.animateY) {
+            chart.animateY(3000);
+            return true;
+        } else if (item.getItemId() == R.id.animateXY) {
 
-                chart.animateXY(3000, 3000);
-                break;
+            chart.animateXY(3000, 3000);
+            return true;
+        } else if (item.getItemId() == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
-            }
+            return true;
         }
         return true;
     }
@@ -232,17 +215,18 @@ public class ScatterChartActivity extends DemoBase implements OnSeekBarChangeLis
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        Log.i("VAL SELECTED",
-                "Value: " + e.getY() + ", xIndex: " + e.getX()
-                        + ", DataSet index: " + h.getDataSetIndex());
+        Log.i("VAL SELECTED", "Value: " + e.getY() + ", xIndex: " + e.getX() + ", DataSet index: " + h.getDataSetIndex());
     }
 
     @Override
-    public void onNothingSelected() {}
+    public void onNothingSelected() {
+    }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {}
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {}
+    public void onStopTrackingTouch(SeekBar seekBar) {
+    }
 }

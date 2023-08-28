@@ -1,4 +1,3 @@
-
 package com.rejowan.mpandroidchart;
 
 import android.Manifest;
@@ -38,8 +37,7 @@ import com.rejowan.mpandroidchart.notimportant.DemoBase;
 
 import java.util.ArrayList;
 
-public class PiePolylineChartActivity extends DemoBase implements OnSeekBarChangeListener,
-        OnChartValueSelectedListener {
+public class PiePolylineChartActivity extends DemoBase implements OnSeekBarChangeListener, OnChartValueSelectedListener {
 
     private PieChart chart;
     private SeekBar seekBarX, seekBarY;
@@ -50,8 +48,7 @@ public class PiePolylineChartActivity extends DemoBase implements OnSeekBarChang
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_piechart);
 
         setTitle("PiePolylineChartActivity");
@@ -183,92 +180,72 @@ public class PiePolylineChartActivity extends DemoBase implements OnSeekBarChang
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/PiePolylineChartActivity.java"));
-                startActivity(i);
-                break;
-            }
-            case R.id.actionToggleValues: {
-                for (IDataSet<?> set : chart.getData().getDataSets())
-                    set.setDrawValues(!set.isDrawValuesEnabled());
+        if (item.getItemId() == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/PiePolylineChartActivity.java"));
+            startActivity(i);
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleValues) {
+            for (IDataSet<?> set : chart.getData().getDataSets())
+                set.setDrawValues(!set.isDrawValuesEnabled());
 
-                chart.invalidate();
-                break;
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleHole) {
+            chart.setDrawHoleEnabled(!chart.isDrawHoleEnabled());
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleMinAngles) {
+            if (chart.getMinAngleForSlices() == 0f) chart.setMinAngleForSlices(36f);
+            else chart.setMinAngleForSlices(0f);
+            chart.notifyDataSetChanged();
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleCurvedSlices) {
+            boolean toSet = !chart.isDrawRoundedSlicesEnabled() || !chart.isDrawHoleEnabled();
+            chart.setDrawRoundedSlices(toSet);
+            if (toSet && !chart.isDrawHoleEnabled()) {
+                chart.setDrawHoleEnabled(true);
             }
-            case R.id.actionToggleHole: {
-                if (chart.isDrawHoleEnabled())
-                    chart.setDrawHoleEnabled(false);
-                else
-                    chart.setDrawHoleEnabled(true);
-                chart.invalidate();
-                break;
+            if (toSet && chart.isDrawSlicesUnderHoleEnabled()) {
+                chart.setDrawSlicesUnderHole(false);
             }
-            case R.id.actionToggleMinAngles: {
-                if (chart.getMinAngleForSlices() == 0f)
-                    chart.setMinAngleForSlices(36f);
-                else
-                    chart.setMinAngleForSlices(0f);
-                chart.notifyDataSetChanged();
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleCurvedSlices: {
-                boolean toSet = !chart.isDrawRoundedSlicesEnabled() || !chart.isDrawHoleEnabled();
-                chart.setDrawRoundedSlices(toSet);
-                if (toSet && !chart.isDrawHoleEnabled()) {
-                    chart.setDrawHoleEnabled(true);
-                }
-                if (toSet && chart.isDrawSlicesUnderHoleEnabled()) {
-                    chart.setDrawSlicesUnderHole(false);
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionDrawCenter: {
-                if (chart.isDrawCenterTextEnabled())
-                    chart.setDrawCenterText(false);
-                else
-                    chart.setDrawCenterText(true);
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleXValues: {
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionDrawCenter) {
+            chart.setDrawCenterText(!chart.isDrawCenterTextEnabled());
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleXValues) {
 
-                chart.setDrawEntryLabels(!chart.isDrawEntryLabelsEnabled());
-                chart.invalidate();
-                break;
+            chart.setDrawEntryLabels(!chart.isDrawEntryLabelsEnabled());
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionTogglePercent) {
+            chart.setUsePercentValues(!chart.isUsePercentValuesEnabled());
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.animateX) {
+            chart.animateX(1400);
+            return true;
+        } else if (item.getItemId() == R.id.animateY) {
+            chart.animateY(1400);
+            return true;
+        } else if (item.getItemId() == R.id.animateXY) {
+            chart.animateXY(1400, 1400);
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleSpin) {
+            chart.spin(1000, chart.getRotationAngle(), chart.getRotationAngle() + 360, Easing.EaseInOutCubic);
+            return true;
+        } else if (item.getItemId() == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
-            case R.id.actionTogglePercent:
-                chart.setUsePercentValues(!chart.isUsePercentValuesEnabled());
-                chart.invalidate();
-                break;
-            case R.id.animateX: {
-                chart.animateX(1400);
-                break;
-            }
-            case R.id.animateY: {
-                chart.animateY(1400);
-                break;
-            }
-            case R.id.animateXY: {
-                chart.animateXY(1400, 1400);
-                break;
-            }
-            case R.id.actionToggleSpin: {
-                chart.spin(1000, chart.getRotationAngle(), chart.getRotationAngle() + 360, Easing.EaseInOutCubic);
-                break;
-            }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
-            }
+            return true;
         }
+
         return true;
     }
 
@@ -301,11 +278,8 @@ public class PiePolylineChartActivity extends DemoBase implements OnSeekBarChang
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
-        if (e == null)
-            return;
-        Log.i("VAL SELECTED",
-                "Value: " + e.getY() + ", xIndex: " + e.getX()
-                        + ", DataSet index: " + h.getDataSetIndex());
+        if (e == null) return;
+        Log.i("VAL SELECTED", "Value: " + e.getY() + ", xIndex: " + e.getX() + ", DataSet index: " + h.getDataSetIndex());
     }
 
     @Override
@@ -314,8 +288,10 @@ public class PiePolylineChartActivity extends DemoBase implements OnSeekBarChang
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {}
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {}
+    public void onStopTrackingTouch(SeekBar seekBar) {
+    }
 }

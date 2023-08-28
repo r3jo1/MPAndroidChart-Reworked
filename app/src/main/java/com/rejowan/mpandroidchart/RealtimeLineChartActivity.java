@@ -1,4 +1,3 @@
-
 package com.rejowan.mpandroidchart;
 
 import android.Manifest;
@@ -30,16 +29,14 @@ import com.rejowan.chart.listener.OnChartValueSelectedListener;
 import com.rejowan.chart.utils.ColorTemplate;
 import com.rejowan.mpandroidchart.notimportant.DemoBase;
 
-public class RealtimeLineChartActivity extends DemoBase implements
-        OnChartValueSelectedListener {
+public class RealtimeLineChartActivity extends DemoBase implements OnChartValueSelectedListener {
 
     private LineChart chart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_realtime_linechart);
 
         setTitle("RealtimeLineChartActivity");
@@ -151,8 +148,7 @@ public class RealtimeLineChartActivity extends DemoBase implements
 
     private void feedMultiple() {
 
-        if (thread != null)
-            thread.interrupt();
+        if (thread != null) thread.interrupt();
 
         final Runnable runnable = new Runnable() {
 
@@ -192,34 +188,29 @@ public class RealtimeLineChartActivity extends DemoBase implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/RealtimeLineChartActivity.java"));
-                startActivity(i);
-                break;
+        if (item.getItemId() == R.id.viewGithub) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/RealtimeLineChartActivity.java"));
+            startActivity(i);
+            return true;
+        } else if (item.getItemId() == R.id.actionAdd) {
+            addEntry();
+            return true;
+        } else if (item.getItemId() == R.id.actionClear) {
+            chart.clearValues();
+            Toast.makeText(this, "Chart cleared!", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (item.getItemId() == R.id.actionFeedMultiple) {
+            feedMultiple();
+            return true;
+        } else if (item.getItemId() == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
-            case R.id.actionAdd: {
-                addEntry();
-                break;
-            }
-            case R.id.actionClear: {
-                chart.clearValues();
-                Toast.makeText(this, "Chart cleared!", Toast.LENGTH_SHORT).show();
-                break;
-            }
-            case R.id.actionFeedMultiple: {
-                feedMultiple();
-                break;
-            }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
-            }
+            return true;
+
         }
         return true;
     }

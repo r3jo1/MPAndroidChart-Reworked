@@ -1,4 +1,3 @@
-
 package com.rejowan.mpandroidchart;
 
 import android.Manifest;
@@ -17,16 +16,13 @@ import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
-import com.rejowan.chart.animation.Easing;
 import com.rejowan.chart.charts.LineChart;
 import com.rejowan.chart.components.Legend;
 import com.rejowan.chart.data.Entry;
 import com.rejowan.chart.data.LineData;
 import com.rejowan.chart.data.LineDataSet;
 import com.rejowan.chart.highlight.Highlight;
-import com.rejowan.chart.interfaces.datasets.IDataSet;
 import com.rejowan.chart.interfaces.datasets.ILineDataSet;
-import com.rejowan.chart.interfaces.datasets.IRadarDataSet;
 import com.rejowan.chart.listener.ChartTouchListener;
 import com.rejowan.chart.listener.OnChartGestureListener;
 import com.rejowan.chart.listener.OnChartValueSelectedListener;
@@ -94,7 +90,7 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
         l.setDrawInside(false);
     }
 
-    private final int[] colors = new int[] {
+    private final int[] colors = new int[]{
             ColorTemplate.VORDIPLOM_COLORS[0],
             ColorTemplate.VORDIPLOM_COLORS[1],
             ColorTemplate.VORDIPLOM_COLORS[2]
@@ -148,93 +144,119 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/RadarChartActivity.java"));
-                startActivity(i);
-                break;
-            }
-            case R.id.actionToggleValues: {
-                for (IDataSet<?> set : chart.getData().getDataSets())
-                    set.setDrawValues(!set.isDrawValuesEnabled());
 
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleHighlight: {
-                if (chart.getData() != null) {
-                    chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
-                    chart.invalidate();
-                }
-                break;
-            }
-            case R.id.actionToggleRotate: {
-                if (chart.isRotationEnabled())
-                    chart.setRotationEnabled(false);
-                else
-                    chart.setRotationEnabled(true);
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleFilled: {
-                ArrayList<IRadarDataSet> sets = (ArrayList<IRadarDataSet>) chart.getData().getDataSets();
+        if (item.getItemId() == R.id.actionToggleValues) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/MultiLineChartActivity.java"));
+            startActivity(i);
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleValues) {
+            List<ILineDataSet> sets = chart.getData()
+                    .getDataSets();
 
-                for (IRadarDataSet set : sets) {
-                    if (set.isDrawFilledEnabled())
-                        set.setDrawFilled(false);
-                    else
-                        set.setDrawFilled(true);
-                }
-                chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleHighlightCircle: {
-                ArrayList<IRadarDataSet> sets = (ArrayList<IRadarDataSet>) chart.getData().getDataSets();
+            for (ILineDataSet iSet : sets) {
 
-                for (IRadarDataSet set : sets) {
-                    set.setDrawHighlightCircleEnabled(!set.isDrawHighlightCircleEnabled());
-                }
+                LineDataSet set = (LineDataSet) iSet;
+                set.setDrawValues(!set.isDrawValuesEnabled());
+            }
+
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionTogglePinch) {
+            chart.setPinchZoom(!chart.isPinchZoomEnabled());
+
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleAutoScaleMinMax) {
+            chart.setAutoScaleMinMaxEnabled(!chart.isAutoScaleMinMaxEnabled());
+            chart.notifyDataSetChanged();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleHighlight) {
+            if (chart.getData() != null) {
+                chart.getData().setHighlightEnabled(!chart.getData().isHighlightEnabled());
                 chart.invalidate();
-                break;
             }
-            case R.id.actionToggleXLabels: {
-                chart.getXAxis().setEnabled(!chart.getXAxis().isEnabled());
-                chart.notifyDataSetChanged();
-                chart.invalidate();
-                break;
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleFilled) {
+            List<ILineDataSet> sets = chart.getData()
+                    .getDataSets();
+
+            for (ILineDataSet iSet : sets) {
+
+                LineDataSet set = (LineDataSet) iSet;
+                set.setDrawFilled(!set.isDrawFilledEnabled());
             }
-            case R.id.actionToggleYLabels: {
-                chart.getYAxis().setEnabled(!chart.getYAxis().isEnabled());
-                chart.invalidate();
-                break;
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleCircles) {
+            List<ILineDataSet> sets = chart.getData()
+                    .getDataSets();
+
+            for (ILineDataSet iSet : sets) {
+
+                LineDataSet set = (LineDataSet) iSet;
+                set.setDrawCircles(!set.isDrawCirclesEnabled());
             }
-            case R.id.animateX: {
-                chart.animateX(1400);
-                break;
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleCubic) {
+            List<ILineDataSet> sets = chart.getData()
+                    .getDataSets();
+
+            for (ILineDataSet iSet : sets) {
+
+                LineDataSet set = (LineDataSet) iSet;
+                set.setMode(set.getMode() == LineDataSet.Mode.CUBIC_BEZIER
+                        ? LineDataSet.Mode.LINEAR
+                        : LineDataSet.Mode.CUBIC_BEZIER);
             }
-            case R.id.animateY: {
-                chart.animateY(1400);
-                break;
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleStepped) {
+            List<ILineDataSet> sets = chart.getData()
+                    .getDataSets();
+
+            for (ILineDataSet iSet : sets) {
+
+                LineDataSet set = (LineDataSet) iSet;
+                set.setMode(set.getMode() == LineDataSet.Mode.STEPPED
+                        ? LineDataSet.Mode.LINEAR
+                        : LineDataSet.Mode.STEPPED);
             }
-            case R.id.animateXY: {
-                chart.animateXY(1400, 1400);
-                break;
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleHorizontalCubic) {
+            List<ILineDataSet> sets = chart.getData()
+                    .getDataSets();
+
+            for (ILineDataSet iSet : sets) {
+
+                LineDataSet set = (LineDataSet) iSet;
+                set.setMode(set.getMode() == LineDataSet.Mode.HORIZONTAL_BEZIER
+                        ? LineDataSet.Mode.LINEAR
+                        : LineDataSet.Mode.HORIZONTAL_BEZIER);
             }
-            case R.id.actionToggleSpin: {
-                chart.spin(2000, chart.getRotationAngle(), chart.getRotationAngle() + 360, Easing.EaseInOutCubic);
-                break;
+            chart.invalidate();
+            return true;
+        } else if (item.getItemId() == R.id.actionSave) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                saveToGallery();
+            } else {
+                requestStoragePermission(chart);
             }
-            case R.id.actionSave: {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    saveToGallery();
-                } else {
-                    requestStoragePermission(chart);
-                }
-                break;
-            }
+            return true;
+        } else if (item.getItemId() == R.id.animateX) {
+            chart.animateX(2000);
+            return true;
+        } else if (item.getItemId() == R.id.animateY) {
+            chart.animateY(2000);
+            return true;
+        } else if (item.getItemId() == R.id.animateXY) {
+            chart.animateXY(2000, 2000);
+            return true;
         }
         return true;
     }
@@ -254,7 +276,7 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
         Log.i("Gesture", "END, lastGesture: " + lastPerformedGesture);
 
         // un-highlight values after the gesture is finished and no single-tap
-        if(lastPerformedGesture != ChartTouchListener.ChartGesture.SINGLE_TAP)
+        if (lastPerformedGesture != ChartTouchListener.ChartGesture.SINGLE_TAP)
             chart.highlightValues(null); // or highlightTouch(null) for callback to onNothingSelected(...)
     }
 
@@ -296,11 +318,14 @@ public class MultiLineChartActivity extends DemoBase implements OnSeekBarChangeL
     }
 
     @Override
-    public void onNothingSelected() {}
+    public void onNothingSelected() {
+    }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {}
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {}
+    public void onStopTrackingTouch(SeekBar seekBar) {
+    }
 }

@@ -182,45 +182,39 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
+        if (item.getItemId() == R.id.viewGithub) {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/PieChartActivity.java"));
                 startActivity(i);
-                break;
-            }
-            case R.id.actionToggleValues: {
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleValues) {
                 for (IDataSet<?> set : chart.getData().getDataSets())
                     set.setDrawValues(!set.isDrawValuesEnabled());
 
                 chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleIcons: {
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleIcons) {
                 for (IDataSet<?> set : chart.getData().getDataSets())
                     set.setDrawIcons(!set.isDrawIconsEnabled());
 
                 chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleHole: {
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleHole) {
                 if (chart.isDrawHoleEnabled())
                     chart.setDrawHoleEnabled(false);
                 else
                     chart.setDrawHoleEnabled(true);
                 chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleMinAngles: {
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleMinAngles) {
                 if (chart.getMinAngleForSlices() == 0f)
                     chart.setMinAngleForSlices(36f);
                 else
                     chart.setMinAngleForSlices(0f);
                 chart.notifyDataSetChanged();
                 chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleCurvedSlices: {
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleCurvedSlices) {
                 boolean toSet = !chart.isDrawRoundedSlicesEnabled() || !chart.isDrawHoleEnabled();
                 chart.setDrawRoundedSlices(toSet);
                 if (toSet && !chart.isDrawHoleEnabled()) {
@@ -230,51 +224,43 @@ public class PieChartActivity extends DemoBase implements OnSeekBarChangeListene
                     chart.setDrawSlicesUnderHole(false);
                 }
                 chart.invalidate();
-                break;
-            }
-            case R.id.actionDrawCenter: {
+            return true;
+        } else if (item.getItemId() == R.id.actionDrawCenter) {
                 if (chart.isDrawCenterTextEnabled())
                     chart.setDrawCenterText(false);
                 else
                     chart.setDrawCenterText(true);
                 chart.invalidate();
-                break;
-            }
-            case R.id.actionToggleXValues: {
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleXValues) {
 
                 chart.setDrawEntryLabels(!chart.isDrawEntryLabelsEnabled());
                 chart.invalidate();
-                break;
-            }
-            case R.id.actionTogglePercent:
+            return true;
+        } else if (item.getItemId() == R.id.actionTogglePercent) {
                 chart.setUsePercentValues(!chart.isUsePercentValuesEnabled());
                 chart.invalidate();
-                break;
-            case R.id.animateX: {
+        return true;
+    } else if (item.getItemId() == R.id.animateX) {
                 chart.animateX(1400);
-                break;
-            }
-            case R.id.animateY: {
+            return true;
+        } else if (item.getItemId() == R.id.animateY) {
                 chart.animateY(1400);
-                break;
-            }
-            case R.id.animateXY: {
+            return true;
+        } else if (item.getItemId() == R.id.animateXY) {
                 chart.animateXY(1400, 1400);
-                break;
-            }
-            case R.id.actionToggleSpin: {
+            return true;
+        } else if (item.getItemId() == R.id.actionToggleSpin) {
                 chart.spin(1000, chart.getRotationAngle(), chart.getRotationAngle() + 360, Easing.EaseInOutCubic);
-                break;
-            }
-            case R.id.actionSave: {
+            return true;
+        } else if (item.getItemId() == R.id.actionSave) {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     saveToGallery();
                 } else {
                     requestStoragePermission(chart);
                 }
-                break;
-            }
-        }
+            return true;
+        } 
         return true;
     }
 

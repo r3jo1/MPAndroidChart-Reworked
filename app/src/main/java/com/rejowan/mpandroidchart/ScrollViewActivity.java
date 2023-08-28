@@ -84,14 +84,14 @@ public class ScrollViewActivity extends DemoBase {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.viewGithub: {
+
+            if (item.getItemId() == R.id.viewGithub) {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse("https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/com/xxmassdeveloper/mpchartexample/ScrollViewActivity.java"));
                 startActivity(i);
-                break;
+                return true;
             }
-        }
+
 
         return true;
     }
