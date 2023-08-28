@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "MPAndroidChart-Reworked"
 include ':app'
+include ':chart'
