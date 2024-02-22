@@ -19,7 +19,7 @@ dependencyResolutionManagement {
 
 ``` groovy
 	dependencies {
-	        implementation 'com.github.ahmmedrejowan:MPAndroidChart-Reworked:1.0'
+	        implementation 'com.github.r3jo1:MPAndroidChart-Reworked:1.0'
 	}
 ```
 
